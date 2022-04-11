@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPF_GunMayhem.Logic;
 
 namespace WPF_GunMayhem
 {
@@ -20,19 +21,46 @@ namespace WPF_GunMayhem
     /// </summary>
     public partial class MainWindow : Window
     {
+        CharacterLogic logic;
         public MainWindow()
         {
             InitializeComponent();
+            logic = new CharacterLogic();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             display.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
+
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             display.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Left)
+            {
+                logic.Control(CharacterLogic.Controls.Left);
+            }
+            else if(e.Key == Key.Right)
+            {
+                logic.Control(CharacterLogic.Controls.Right);
+            }
+            else if (e.Key == Key.Up)
+            {
+                logic.Control(CharacterLogic.Controls.Up);
+            }
+            else if(e.Key == Key.Down)
+            {
+                logic.Control(CharacterLogic.Controls.Down);
+            }
+            else if(e.Key== Key.Space)
+            {
+                logic.Control(CharacterLogic.Controls.Shoot);
+            }
         }
     }
 }
