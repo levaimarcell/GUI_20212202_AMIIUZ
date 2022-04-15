@@ -34,23 +34,47 @@ namespace WPF_GunMayhem.Renderer
             }
         }
 
-        public Brush CharacterBrush
-        {
-            get
-            {
-                return new ImageBrush(new BitmapImage(new Uri(Path.Combine("Images", "character1.png"), UriKind.RelativeOrAbsolute)));
-            }
-        }
-
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
-            if(area.Width > 0 && area.Height > 0)
+            if(model != null && area.Width > 50 && area.Height > 50)
             {
                 drawingContext.DrawRectangle(BackgroundBrush, null, new Rect(0, 0, area.Width, area.Height));
 
 
-                drawingContext.DrawRectangle(CharacterBrush, null, new Rect(area.Width / 2, area.Height / 2, 50, 50));
+                double rectWidth = area.Width / model.GameMatrix.GetLength(1);
+                double rectHeight = area.Height / model.GameMatrix.GetLength(0);
+
+
+                for (int i = 0; i < model.GameMatrix.GetLength(0); i++)
+                {
+                    for (int j = 0; j < model.GameMatrix.GetLength(1); j++)
+                    {
+                        ImageBrush brush = new ImageBrush();
+                        switch (model.GameMatrix[i, j])
+                        {
+                            case CharacterLogic.Items.platform:
+                                    brush = new ImageBrush(new BitmapImage(new Uri(Path.Combine("Images", "platform_block.png"), UriKind.RelativeOrAbsolute)));
+                                break;
+                            case CharacterLogic.Items.wall:
+                                break;
+                            case CharacterLogic.Items.player:
+                                brush = new ImageBrush(new BitmapImage(new Uri(Path.Combine("Images", "character1.png"), UriKind.RelativeOrAbsolute)));
+                                break;
+                            case CharacterLogic.Items.end:
+                                break;
+                            case CharacterLogic.Items.air:
+                                break;
+                            default:
+                                break;
+                        }
+
+                        drawingContext.DrawRectangle(brush
+                                    , new Pen(Brushes.Black, 0),
+                                    new Rect(j * rectWidth, i * rectHeight, rectWidth, rectHeight)
+                                    );
+                    }
+                }
             }
         }
     }

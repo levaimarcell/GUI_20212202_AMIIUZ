@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WPF_GunMayhem.Logic;
+using WPF_GunMayhem.Controller;
 
 namespace WPF_GunMayhem
 {
@@ -21,11 +22,13 @@ namespace WPF_GunMayhem
     /// </summary>
     public partial class MainWindow : Window
     {
-        CharacterLogic logic;
+        GameController controller;
         public MainWindow()
         {
             InitializeComponent();
-            logic = new CharacterLogic();
+            CharacterLogic  logic = new CharacterLogic();
+            display.SetupModel(logic);
+            controller = new GameController(logic);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -41,26 +44,8 @@ namespace WPF_GunMayhem
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Left)
-            {
-                logic.Control(CharacterLogic.Controls.Left);
-            }
-            else if(e.Key == Key.Right)
-            {
-                logic.Control(CharacterLogic.Controls.Right);
-            }
-            else if (e.Key == Key.Up)
-            {
-                logic.Control(CharacterLogic.Controls.Up);
-            }
-            else if(e.Key == Key.Down)
-            {
-                logic.Control(CharacterLogic.Controls.Down);
-            }
-            else if(e.Key== Key.Space)
-            {
-                logic.Control(CharacterLogic.Controls.Shoot);
-            }
+            controller.KeyPressed(e.Key);
+            display.InvalidateVisual();
         }
     }
 }

@@ -2,8 +2,8 @@
 
 namespace WPF_GunMayhem.Logic
 {
-    internal interface IGameModel
+    internal interface IGameControl
     {
-        Items[,] GameMatrix { get; set; }
+        void Control(Controls control);
     }
 }
