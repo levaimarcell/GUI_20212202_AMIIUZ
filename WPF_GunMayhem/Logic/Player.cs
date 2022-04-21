@@ -9,14 +9,16 @@ namespace WPF_GunMayhem.Logic
 {
     internal class Player
     {
-        public Point Center { get; set; }
         public double XPosition { get; set; }
+        public double YPosition { get; set; }
+
         public bool Direction { get; set; } 
 
-        public Player(Size area, double xPosition, bool direction)
+        public Player(Size area, double xPosition, double yPosition, bool direction)
         {
             XPosition = xPosition;
-            Center = new Point((int)area.Width, (int)area.Height);
+            YPosition = yPosition;
+            //Center = new Point((int)area.Width, (int)area.Height);
             Direction = direction;
         }
     }

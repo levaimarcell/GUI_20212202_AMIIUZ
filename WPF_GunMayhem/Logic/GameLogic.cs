@@ -37,8 +37,8 @@ namespace WPF_GunMayhem.Logic
 
         public void SetupCharacters()
         {
-            Character1 = new Player(new Size(area.Width, area.Height), 20, true);
-            Character2 = new Player(new Size(area.Width, area.Height), 20, true);
+            Character1 = new Player(new Size(area.Width, area.Height), 20, 20, true);
+            Character2 = new Player(new Size(area.Width, area.Height), 20, 20, true);
             Bullets = new List<Bullet>();
         }
 
@@ -125,11 +125,11 @@ namespace WPF_GunMayhem.Logic
         {
             if (Character1.Direction)
             {
-                Bullets.Add(new Bullet(new Point(area.Width / 2 + Character1.XPosition, area.Height / 2), new Vector(10, 0)));
+                Bullets.Add(new Bullet(area.Width / 2 + Character1.XPosition, Character1.YPosition, new Vector(10, 0)));
             }
             else
             {
-                Bullets.Add(new Bullet(new Point(area.Width / 2 + Character1.XPosition, area.Height / 2), new Vector(-10, 0)));
+                Bullets.Add(new Bullet(area.Width / 2 + Character1.XPosition, Character1.YPosition, new Vector(-10, 0)));
             }
             
         }

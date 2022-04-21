@@ -9,21 +9,24 @@ namespace WPF_GunMayhem.Logic
 {
     internal class Bullet
     {
-        public Point Center { get; set; }
+        public double XPosition { get; set; }
+        public double YPosition { get; set; }
         public Vector Speed { get; set; }
 
-        public Bullet(Point center, Vector speed)
+        public Bullet(double xPosition, double yPosition, Vector speed)
         {
-            Center = center;
+            XPosition = xPosition;
+            YPosition = yPosition;
             Speed = speed;
         }
 
         public bool Move(Size area)
         {
-            Point newCenter = new Point((int)Center.X + (int)Speed.X, (int)Center.Y);
-            if(newCenter.X >= 0 && newCenter.X <= area.Width)
+
+            double newX = XPosition + Speed.X;
+            if(newX >= 0 && newX <= area.Width)
             {
-                Center = newCenter;
+                XPosition = newX;
                 return true;
             }
             else
