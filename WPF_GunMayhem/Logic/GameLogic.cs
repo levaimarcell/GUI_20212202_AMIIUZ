@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace WPF_GunMayhem.Logic
 {
-    internal class GameLogic : IGameModel, IGameControl
+    internal class GameLogic : IGameModel
     {
 
         public enum Items
@@ -37,8 +37,8 @@ namespace WPF_GunMayhem.Logic
 
         public void SetupCharacters()
         {
-            Character1 = new Player(new Size(area.Width, area.Height), 20, 20, true);
-            Character2 = new Player(new Size(area.Width, area.Height), 20, 20, true);
+            Character1 = new Player(new Size(area.Width, area.Height),true);
+            Character2 = new Player(new Size(area.Width, area.Height),true);
             Bullets = new List<Bullet>();
         }
 
@@ -76,67 +76,49 @@ namespace WPF_GunMayhem.Logic
             }
         }
 
-
-        public void Control(Controls control, int player)
+        public void Control()
         {
             
-            switch (control)
+            if (Character1.Left)
             {
-                case Controls.Left:
-                    if(player == 1)
-                    {
-                        Character1.XPosition -= 4;
-                        Character1.Direction = false;
-                    }
-                    else if(player == 2)
-                    {
-                        Character2.XPosition -= 4;
-                        Character2.Direction = false;
-                    }
-                    break;
-                case Controls.Right:
-                    if (player == 1)
-                    {
-                        Character1.XPosition += 4;
-                        Character1.Direction = true;
-                    }
-                    else if (player == 2)
-                    {
-                        Character2.XPosition += 4;
-                        Character2.Direction = true;
-                    }
-                    break;
-                case Controls.Up:
-                   
-                    break;
-                case Controls.Down:
-                  
-                    break;
-                case Controls.Shoot:
-                    NewShoot();
-                    break;
-                default:
-                    break;
+                Character1.MoveLeft(area);
             }
-            Changed?.Invoke(this, null);
-        }
-
-        private void NewShoot()
-        {
-            if (Character1.Direction)
+            if (Character1.Right)
             {
-                Bullets.Add(new Bullet(area.Width / 2 + Character1.XPosition, Character1.YPosition, new Vector(10, 0)));
+                Character1.MoveRigth(area);
             }
-            else
+            if (Character1.Jump)
             {
-                Bullets.Add(new Bullet(area.Width / 2 + Character1.XPosition, Character1.YPosition, new Vector(-10, 0)));
+                bool jumping = Character1.JumpMove();
+                if (!jumping)
+                {
+                    Character1.Jump = false;
+                }
             }
-            
+            if (Character1.Fall)
+            {
+                Character1.FallMove(area);
+            }
+            if (Character1.Shoot)
+            {
+                if (Character1.Direction)
+                {
+                    Bullets.Add(new Bullet(area.Width / 2 + Character1.XPosition, Character1.YPosition, new Vector(10, 0)));
+                    
+                }
+                else
+                {
+                    Bullets.Add(new Bullet(area.Width / 2 + Character1.XPosition, Character1.YPosition, new Vector(-10, 0)));
+                }
+                Character1.Shoot = false;
+            }
         }
 
         public void TimeStep()
         {
-            for(int i = 0; i < Bullets.Count; i++)
+            Control();
+            
+            for (int i = 0; i < Bullets.Count; i++)
             {
                 bool inside = Bullets[i].Move(area);
                 if (!inside)
@@ -144,7 +126,18 @@ namespace WPF_GunMayhem.Logic
                     Bullets.RemoveAt(i);
                 }
             }
-            Changed?.Invoke(this, null);
+
+            double rectHeight = area.Height / GameMatrix.GetLength(0);
+
+            for (int i = 0; i < GameMatrix.GetLength(0); i++)
+            {               
+                    if (Character1.YPosition == i * rectHeight)
+                    {
+                    Character1.Fall = false;
+                    }
+            }
+
+                    Changed?.Invoke(this, null);
         }
     }
 }

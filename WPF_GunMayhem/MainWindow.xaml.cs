@@ -63,5 +63,10 @@ namespace WPF_GunMayhem
         {
             controller.KeyDown(e.Key);
         }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            controller.KeyUp(e.Key);
+        }
     }
 }

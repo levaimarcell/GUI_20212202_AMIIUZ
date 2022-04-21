@@ -96,14 +96,16 @@ namespace WPF_GunMayhem.Renderer
                                    new Rect(j * rectWidth, i * rectHeight, rectWidth, rectHeight)
                                    );
                         }
-                        drawingContext.DrawRectangle(player1Brush, null, new Rect((area.Width / 2 - 25) + model.Character1.XPosition, model.Character1.YPosition, area.Height / 10, area.Height / 10));
-                        drawingContext.DrawRectangle(player2Brush, null, new Rect((area.Width / 2 + 25) + model.Character2.XPosition, model.Character2.YPosition, area.Height / 10, area.Height / 10));
+                        drawingContext.DrawRectangle(player1Brush, null, new Rect((area.Width / 2 - 25) + model.Character1.XPosition, 0 + model.Character1.YPosition,
+                            area.Height / 10, area.Height / 10));
+                        drawingContext.DrawRectangle(player2Brush, null, new Rect((area.Width / 2 + 25) + model.Character2.XPosition, area.Height / 2 + model.Character2.YPosition,
+                            area.Height / 10, area.Height / 10));
                     }
                 }
                 foreach (var item in model.Bullets)
                 {
                     drawingContext.DrawRectangle(new ImageBrush(new BitmapImage(new Uri(Path.Combine("Images", "bullet.png"), UriKind.RelativeOrAbsolute))),
-                        null, new Rect(item.XPosition, item.YPosition + (area.Height / 28), area.Height / 100, area.Height / 100));
+                        null, new Rect(item.XPosition, item.YPosition + (area.Height / 2) +(area.Height / 28), area.Height / 100, area.Height / 100));
                 }
             }
         }
