@@ -21,12 +21,30 @@ namespace WPF_GunMayhem.Logic
         }
 
         public Items[,] GameMatrix { get; set; }
-        private string[] maps;
+        public Player Character1 { get; set; }
+        public Player Character2 { get; set; }
 
+        private string[] maps;
+        System.Windows.Size area;
+       
+        public void SetupSizes(System.Windows.Size area)
+        {
+            this.area = area; 
+        }
+
+        public void SetupCharacters()
+        {
+            Character1 = new Player(new System.Windows.Size(area.Width, area.Height), 20, true);
+            Character2 = new Player(new System.Windows.Size(area.Width, area.Height), 20, true);
+        }
+
+      
         public CharacterLogic()
         {
             maps = Directory.GetFiles(Path.Combine(Directory.GetCurrentDirectory(), "Levels"), "*.txt");
             LoadMap(maps.First());
+            SetupSizes(area);
+            SetupCharacters();
         }
 
         private void LoadMap(string path)
@@ -54,56 +72,45 @@ namespace WPF_GunMayhem.Logic
             }
         }
 
-        public void Control(Controls control)
+
+        public void Control(Controls control, int player)
         {
-            var coords = WhereAmI();
-            int i = coords[0];
-            int j = coords[1];
-            int old_i = i;
-            int old_j = j;
+            
             switch (control)
             {
                 case Controls.Left:
-                    j -= 1;
+                    if(player == 1)
+                    {
+                        Character1.Speed -= 4;
+                        Character1.Direction = false;
+                    }
+                    else if(player == 2)
+                    {
+                        Character2.Speed -= 4;
+                        Character2.Direction = false;
+                    }
                     break;
                 case Controls.Right:
-                    j += 1;
+                    if (player == 1)
+                    {
+                        Character1.Speed += 4;
+                        Character1.Direction = true;
+                    }
+                    else if (player == 2)
+                    {
+                        Character2.Speed += 4;
+                        Character2.Direction = true;
+                    }
                     break;
                 case Controls.Up:
-                    i -= 1;
+                   
                     break;
                 case Controls.Down:
-                    i += 1;
+                  
                     break;
                 case Controls.Shoot:
                     break;
             }
-
-            if (GameMatrix[i, j] == Items.air)
-            {
-                GameMatrix[i, j] = Items.player;
-                GameMatrix[old_i, old_j] = Items.air;
-            }
-            else if (GameMatrix[i, j] == Items.end)
-            {
-
-            }
-        }
-
-
-        private int[] WhereAmI()
-        {
-            for (int i = 0; i < GameMatrix.GetLength(0); i++)
-            {
-                for (int j = 0; j < GameMatrix.GetLength(1); j++)
-                {
-                    if (GameMatrix[i, j] == Items.player)
-                    {
-                        return new int[] { i, j };
-                    }
-                }
-            }
-            return new int[] { -1, -1 };
         }
     }
 }

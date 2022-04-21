@@ -4,6 +4,6 @@ namespace WPF_GunMayhem.Logic
 {
     internal interface IGameControl
     {
-        void Control(Controls control);
+        void Control(Controls control, int player);
     }
 }

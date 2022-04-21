@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WPF_GunMayhem.Logic;
 using WPF_GunMayhem.Controller;
+using System.Windows.Threading;
 
 namespace WPF_GunMayhem
 {
@@ -26,15 +27,19 @@ namespace WPF_GunMayhem
         public MainWindow()
         {
             InitializeComponent();
-            CharacterLogic  logic = new CharacterLogic();
+            CharacterLogic logic = new CharacterLogic();
             display.SetupModel(logic);
             controller = new GameController(logic);
         }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             display.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
 
+            DispatcherTimer gameTimer = new DispatcherTimer();
+            gameTimer.Interval = TimeSpan.FromMilliseconds(100);
+            gameTimer.Start();
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -44,7 +49,13 @@ namespace WPF_GunMayhem
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            controller.KeyPressed(e.Key);
+            controller.KeyDown(e.Key);
+            display.InvalidateVisual();
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            controller.KeyUp(e.Key);
             display.InvalidateVisual();
         }
     }

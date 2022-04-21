@@ -51,6 +51,26 @@ namespace WPF_GunMayhem.Renderer
                     for (int j = 0; j < model.GameMatrix.GetLength(1); j++)
                     {
                         ImageBrush brush = new ImageBrush();
+                        ImageBrush player1Brush = new ImageBrush();
+                        ImageBrush player2Brush = new ImageBrush();
+                        if (model.Character1.Direction == true)
+                        {
+                            player1Brush = new ImageBrush(new BitmapImage(new Uri(Path.Combine("Images", "character1.png"), UriKind.RelativeOrAbsolute)));
+                        }
+                        else
+                        {
+                            player1Brush = new ImageBrush(new BitmapImage(new Uri(Path.Combine("Images", "character1_left.png"), UriKind.RelativeOrAbsolute)));
+                        }
+
+                        if (model.Character2.Direction == true)
+                        {
+                            player2Brush = new ImageBrush(new BitmapImage(new Uri(Path.Combine("Images", "character1.png"), UriKind.RelativeOrAbsolute)));
+                        }
+                        else
+                        {
+                            player2Brush = new ImageBrush(new BitmapImage(new Uri(Path.Combine("Images", "character1_left.png"), UriKind.RelativeOrAbsolute)));
+                        }
+
                         switch (model.GameMatrix[i, j])
                         {
                             case CharacterLogic.Items.platform:
@@ -59,7 +79,6 @@ namespace WPF_GunMayhem.Renderer
                             case CharacterLogic.Items.wall:
                                 break;
                             case CharacterLogic.Items.player:
-                                brush = new ImageBrush(new BitmapImage(new Uri(Path.Combine("Images", "character1.png"), UriKind.RelativeOrAbsolute)));
                                 break;
                             case CharacterLogic.Items.end:
                                 break;
@@ -69,10 +88,15 @@ namespace WPF_GunMayhem.Renderer
                                 break;
                         }
 
-                        drawingContext.DrawRectangle(brush
-                                    , new Pen(Brushes.Black, 0),
-                                    new Rect(j * rectWidth, i * rectHeight, rectWidth, rectHeight)
-                                    );
+                        if(brush != null)
+                        {
+                            drawingContext.DrawRectangle(brush
+                                   , new Pen(Brushes.Black, 0),
+                                   new Rect(j * rectWidth, i * rectHeight, rectWidth, rectHeight)
+                                   );
+                        }
+                        drawingContext.DrawRectangle(player1Brush, null, new Rect((area.Width / 2 - 25) + model.Character1.Speed, area.Height / 2 - 25, 50, 50));
+                        drawingContext.DrawRectangle(player2Brush, null, new Rect((area.Width / 2 + 25) + model.Character2.Speed, area.Height / 2 + 25, 50, 50));
                     }
                 }
             }
