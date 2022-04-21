@@ -24,39 +24,44 @@ namespace WPF_GunMayhem
     public partial class MainWindow : Window
     {
         GameController controller;
+        GameLogic logic;
         public MainWindow()
         {
-            InitializeComponent();
-            CharacterLogic logic = new CharacterLogic();
-            display.SetupModel(logic);
-            controller = new GameController(logic);
+            InitializeComponent();  
         }
-
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            display.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
+            logic = new GameLogic();
+            display.SetupModel(logic);
+            controller = new GameController(logic);
 
             DispatcherTimer gameTimer = new DispatcherTimer();
-            gameTimer.Interval = TimeSpan.FromMilliseconds(100);
+            gameTimer.Interval = TimeSpan.FromMilliseconds(40);
+            gameTimer.Tick += GameTimer_Tick;
             gameTimer.Start();
+
+            display.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
+            logic.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
+        }
+
+        private void GameTimer_Tick(object? sender, EventArgs e)
+        {
+            logic.TimeStep();
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            display.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
+            if(logic != null)
+            {
+                display.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
+                logic.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
+            }
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             controller.KeyDown(e.Key);
-            display.InvalidateVisual();
-        }
-
-        private void Window_KeyUp(object sender, KeyEventArgs e)
-        {
-            controller.KeyUp(e.Key);
-            display.InvalidateVisual();
         }
     }
 }

@@ -25,6 +25,7 @@ namespace WPF_GunMayhem.Renderer
         public void SetupModel(IGameModel model)
         {
             this.model = model;
+            this.model.Changed += (sender, eventargs) => this.InvalidateVisual();
         }
         public Brush BackgroundBrush
         {
@@ -73,16 +74,16 @@ namespace WPF_GunMayhem.Renderer
 
                         switch (model.GameMatrix[i, j])
                         {
-                            case CharacterLogic.Items.platform:
+                            case GameLogic.Items.platform:
                                     brush = new ImageBrush(new BitmapImage(new Uri(Path.Combine("Images", "platform_block.png"), UriKind.RelativeOrAbsolute)));
                                 break;
-                            case CharacterLogic.Items.wall:
+                            case GameLogic.Items.wall:
                                 break;
-                            case CharacterLogic.Items.player:
+                            case GameLogic.Items.player:
                                 break;
-                            case CharacterLogic.Items.end:
+                            case GameLogic.Items.end:
                                 break;
-                            case CharacterLogic.Items.air:
+                            case GameLogic.Items.air:
                                 break;
                             default:
                                 break;
@@ -95,9 +96,13 @@ namespace WPF_GunMayhem.Renderer
                                    new Rect(j * rectWidth, i * rectHeight, rectWidth, rectHeight)
                                    );
                         }
-                        drawingContext.DrawRectangle(player1Brush, null, new Rect((area.Width / 2 - 25) + model.Character1.Speed, area.Height / 2 - 25, 50, 50));
-                        drawingContext.DrawRectangle(player2Brush, null, new Rect((area.Width / 2 + 25) + model.Character2.Speed, area.Height / 2 + 25, 50, 50));
+                        drawingContext.DrawRectangle(player1Brush, null, new Rect((area.Width / 2 - 25) + model.Character1.XPosition, area.Height / 2 - 25, 50, 50));
+                        drawingContext.DrawRectangle(player2Brush, null, new Rect((area.Width / 2 + 25) + model.Character2.XPosition, area.Height / 2 + 25, 50, 50));
                     }
+                }
+                foreach (var item in model.Bullets)
+                {
+                    drawingContext.DrawEllipse(Brushes.Red, null, new Point(item.Center.X, item.Center.Y), 4, 4);
                 }
             }
         }

@@ -1,4 +1,4 @@
-﻿using static WPF_GunMayhem.Logic.CharacterLogic;
+﻿using static WPF_GunMayhem.Logic.GameLogic;
 
 namespace WPF_GunMayhem.Logic
 {
