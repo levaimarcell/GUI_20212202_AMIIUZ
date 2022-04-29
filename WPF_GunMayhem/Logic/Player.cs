@@ -30,7 +30,7 @@ namespace WPF_GunMayhem.Logic
             Jump = false;
             Right = false;
             Left = false;
-            Fall = true;
+            Fall = false;
             Shoot = false;
         }
 
@@ -58,7 +58,6 @@ namespace WPF_GunMayhem.Logic
             {
                 YPosition = 0;
             }
-            
         }
 
         public void MoveRigth(Size area)

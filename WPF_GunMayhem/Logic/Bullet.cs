@@ -12,12 +12,14 @@ namespace WPF_GunMayhem.Logic
         public double XPosition { get; set; }
         public double YPosition { get; set; }
         public Vector Speed { get; set; }
+        public bool Direction { get; set; }
 
-        public Bullet(double xPosition, double yPosition, Vector speed)
+        public Bullet(double xPosition, double yPosition, Vector speed, bool direction)
         {
             XPosition = xPosition;
             YPosition = yPosition;
             Speed = speed;
+            Direction = direction;
         }
 
         public bool Move(Size area)
