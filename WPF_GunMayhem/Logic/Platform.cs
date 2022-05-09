@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace WPF_GunMayhem.Logic
 {
-    internal class Platforms
+    internal class Platform
     {
         public double XPosition { get; set; }
         public double YPosition { get; set; }
         public double Width { get; set; }
         public double Height { get; set; }
 
-        public Platforms(double xPosition, double yPosition)
+        public Platform(double xPosition, double yPosition, double width, double height)
         {
             XPosition = xPosition;
             YPosition = yPosition;
-            Width = 200;
-            Height = 40;
+            Width = width;
+            Height = height;
         }
     }
 }

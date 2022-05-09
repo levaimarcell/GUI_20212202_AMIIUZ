@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace WPF_GunMayhem.Logic
 {
@@ -12,32 +13,37 @@ namespace WPF_GunMayhem.Logic
         public double XPosition { get; set; }
         public double YPosition { get; set; }
 
-        public double JumpStart { get; set; }
+        public double MoveStart { get; set; }
         public bool Direction { get; set; }
 
         public bool Right { get; set; }
         public bool Left { get; set; }
+        public bool Down { get; set; }
         public bool Jump { get; set; }
+        public int JumpCount { get; set; }
         public bool Fall { get; set; }
         public bool Shoot { get; set; }
 
-        public Player(Size area, bool direction)
+        public Player(double xPosition, double yPosition, bool direction)
         {
-            XPosition = 0;
-            YPosition = 0;
-            JumpStart = 0;
+            XPosition = xPosition;
+            YPosition = yPosition;
+            MoveStart = 0;
             Direction = direction;
             Jump = false;
+            JumpCount = 0;
             Right = false;
             Left = false;
-            Fall = false;
+            Down = false;
+            Fall = true;
             Shoot = false;
         }
 
-        public bool JumpMove()
+        public bool JumpMove(Size area)
         {
-            double newX = YPosition - 4;
-            if (YPosition >= JumpStart - 20)
+
+            double newX = YPosition - area.Height / 70;
+            if (YPosition >= MoveStart - area.Height / 7)
             {
                 YPosition = newX;
                 return true;
@@ -48,15 +54,49 @@ namespace WPF_GunMayhem.Logic
             }
         }
 
-        public void FallMove(Size area)
+        public bool DownMove(Size area)
+        {
+            double newX = YPosition + area.Height / 50;
+            if (YPosition <= MoveStart + area.Height / 8)
+            {
+                YPosition = newX;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void FallMove(Size area, List<Platform> Platforms)
         {
             if(YPosition <= area.Height)
             {
-                YPosition += 4;
+                bool falling = true;
+                Rect characterRect = new Rect(XPosition, YPosition + area.Height / 10, area.Height / 10, 0);
+                foreach (var item in Platforms)
+                {
+                    Rect platformRect = new Rect(item.XPosition, item.YPosition, item.Width, item.Height);
+                    if (characterRect.IntersectsWith(platformRect))
+                    {
+                        falling = false;
+                        JumpCount = 0;
+                    }
+                }
+                if (falling)
+                {
+                    Fall = true;
+                    YPosition += area.Height / 80;
+                }
+                else
+                {
+                    Fall = false;
+                }
             }
             else
             {
                 YPosition = 0;
+                XPosition = area.Width / 2;
             }
         }
 
@@ -64,12 +104,14 @@ namespace WPF_GunMayhem.Logic
         {
             XPosition += (area.Width / 200);
             Direction = true;
+            Fall = true;
         }
 
         public void MoveLeft(Size area)
         {
             XPosition -= (area.Width / 200);
             Direction = false;
+            Fall = true;
         }
     }
 }

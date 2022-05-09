@@ -13,7 +13,7 @@ namespace WPF_GunMayhem.Controller
         IGameModel model;
         public GameController( IGameModel model)
         {
-            this.model = model;  
+            this.model = model;
         }
 
         public void KeyDown(Key key)
@@ -24,7 +24,7 @@ namespace WPF_GunMayhem.Controller
             }
             if (key == Key.D)
             {
-                
+                model.Character2.Right = true;
             }
             if (key == Key.Left)
             {
@@ -32,17 +32,39 @@ namespace WPF_GunMayhem.Controller
             }
             if (key == Key.A)
             {
-                
+                model.Character2.Left = true;
             }
             if(key == Key.Up)
             {
-                model.Character1.JumpStart = model.Character1.YPosition;
+                model.Character1.MoveStart = model.Character1.YPosition;
                 model.Character1.Jump = true;
+                model.Character1.JumpCount++;
             }
-            if (key == Key.Space)
+            if (key == Key.W)
+            {
+                model.Character2.MoveStart = model.Character2.YPosition;
+                model.Character2.Jump = true;
+                model.Character2.JumpCount++;
+            }
+            if (key == Key.Down)
+            {
+                model.Character1.MoveStart = model.Character1.YPosition;
+                model.Character1.Down = true;
+            }
+            if (key == Key.S)
+            {
+                model.Character2.MoveStart = model.Character2.YPosition;
+                model.Character2.Down = true;
+            }
+            if (key == Key.Enter)
             {
                model.Character1.Shoot = true;
             }
+            if (key == Key.Space)
+            {
+                model.Character2.Shoot = true;
+            }
+
         }
 
         public void KeyUp(Key key)
@@ -53,7 +75,7 @@ namespace WPF_GunMayhem.Controller
             }
             if (key == Key.D)
             {
-               
+                model.Character2.Right = false;
             }
             if (key == Key.Left)
             {
@@ -61,15 +83,15 @@ namespace WPF_GunMayhem.Controller
             }
             if (key == Key.A)
             {
-                
+                model.Character2.Left = false;
             }
-            if (key == Key.Up)
+            if (key == Key.Enter)
             {
-                //model.Character1.Jump = false;
+                model.Character1.Shoot = false;
             }
             if (key == Key.Space)
             {
-                model.Character1.Shoot = false;
+                model.Character2.Shoot = false;
             }
         }
     }

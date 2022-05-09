@@ -42,7 +42,7 @@ namespace WPF_GunMayhem
             gameTimer.Start();
 
             display.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
-            logic.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
+            logic.SetupSizes(new Size((int)grid.ActualWidth,(int)grid.ActualHeight));
         }
 
         private void GameTimer_Tick(object? sender, EventArgs e)

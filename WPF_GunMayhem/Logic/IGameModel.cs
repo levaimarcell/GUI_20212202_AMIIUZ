@@ -10,5 +10,7 @@ namespace WPF_GunMayhem.Logic
         Player Character1 { get; set; }
         Player Character2 { get; set; }
         List<Bullet> Bullets { get; set; }
+
+        List<Platform> Platforms { get; set; }
     }
 }
