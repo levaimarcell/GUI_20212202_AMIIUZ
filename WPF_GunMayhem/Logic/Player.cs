@@ -23,6 +23,7 @@ namespace WPF_GunMayhem.Logic
         public int JumpCount { get; set; }
         public bool Fall { get; set; }
         public bool Shoot { get; set; }
+        public int Life { get; set; }
 
         public Player(double xPosition, double yPosition, bool direction)
         {
@@ -37,6 +38,7 @@ namespace WPF_GunMayhem.Logic
             Down = false;
             Fall = true;
             Shoot = false;
+            Life = 2;
         }
 
         public bool JumpMove(Size area)
@@ -97,6 +99,7 @@ namespace WPF_GunMayhem.Logic
             {
                 YPosition = 0;
                 XPosition = area.Width / 2;
+                Life--;
             }
         }
 

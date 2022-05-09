@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -89,7 +90,14 @@ namespace WPF_GunMayhem.Renderer
                     }
                 }
 
-                
+                drawingContext.DrawRectangle(new SolidColorBrush(Color.FromRgb(33,158,188)),null, new Rect(0, 0, area.Width / 6, area.Height / 10));
+                drawingContext.DrawRectangle(new SolidColorBrush(Color.FromRgb(33, 158, 188)), null, new Rect(area.Width - area.Width / 6, 0, area.Width -  area.Width / 6, area.Height / 10));
+
+                string firstText = "Player1: " + model.Character1.Life.ToString() + " life";
+                drawingContext.DrawText(new FormattedText(firstText, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, new Typeface("Verdana"), area.Width / 60, Brushes.White), new Point(10, 10));
+                string secondText = "Player2: " + model.Character2.Life.ToString() + " life";
+                drawingContext.DrawText(new FormattedText(secondText, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, new Typeface("Verdana"), area.Width / 60, Brushes.White),
+                    new Point(area.Width - area.Width / 6 + 10, 10));
             }
         }
     }

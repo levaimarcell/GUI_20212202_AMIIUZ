@@ -27,6 +27,7 @@ namespace WPF_GunMayhem.Logic
         public List<Platform> Platforms { get; set; }
 
         public event EventHandler Changed;
+        public event EventHandler GameOver;
         Size area;
        
         public void SetupSizes(Size area)
@@ -43,8 +44,8 @@ namespace WPF_GunMayhem.Logic
 
         public void SetupCharacters()
         {
-            Character1 = new Player(area.Width / 2, area.Height, true);
-            Character2 = new Player(area.Width / 4, area.Height, true);
+            Character1 = new Player(area.Width / 4, 0, true);
+            Character2 = new Player(area.Width - area.Width / 4 - area.Height / 10, 0, false);
             Bullets = new List<Bullet>();
         }
 
@@ -88,16 +89,20 @@ namespace WPF_GunMayhem.Logic
             if (Character1.Fall)
             {
                 Character1.FallMove(area, Platforms);
+                if(Character1.Life < 0)
+                {
+                    GameOver?.Invoke(this, null);
+                }
             }
             if (Character1.Shoot)
             {
                 if (Character1.Direction)
                 {
-                    Bullets.Add(new Bullet(Character1.XPosition, Character1.YPosition, new Vector(area.Height / 50, 0), true));
+                    Bullets.Add(new Bullet(Character1.XPosition ,Character1.YPosition, new Vector(area.Height / 50, 0), true, 1));
                 }
                 else
                 {
-                    Bullets.Add(new Bullet(Character1.XPosition, Character1.YPosition, new Vector(-area.Height / 50, 0), false));
+                    Bullets.Add(new Bullet(Character1.XPosition, Character1.YPosition, new Vector(-area.Height / 50, 0), false, 1));
                 }
                 Character1.Shoot = false;
             }
@@ -143,16 +148,20 @@ namespace WPF_GunMayhem.Logic
             if (Character2.Fall)
             {
                 Character2.FallMove(area, Platforms);
+                if (Character2.Life < 0)
+                {
+                    GameOver?.Invoke(this, null);
+                }
             }
             if (Character2.Shoot)
             {
                 if (Character2.Direction)
                 {
-                    Bullets.Add(new Bullet(Character2.XPosition, Character2.YPosition, new Vector(area.Height / 50, 0), true));
+                    Bullets.Add(new Bullet(Character2.XPosition, Character2.YPosition, new Vector(area.Height / 50, 0), true, 2));
                 }
                 else
                 {
-                    Bullets.Add(new Bullet(Character2.XPosition, Character2.YPosition, new Vector(-area.Height / 50, 0), false));
+                    Bullets.Add(new Bullet(Character2.XPosition, Character2.YPosition, new Vector(-area.Height / 50, 0), false, 2));
                 }
                 Character2.Shoot = false;
             }
@@ -169,6 +178,38 @@ namespace WPF_GunMayhem.Logic
                 if (!inside)
                 {
                     Bullets.RemoveAt(i);
+                }
+                else
+                {
+                    Rect bulletRect = new Rect(Bullets[i].XPosition, Bullets[i].YPosition, 4, 4);
+                    Rect character1Rect = new Rect(Character1.XPosition, Character1.YPosition, area.Height / 10, area.Height / 10);
+                    Rect character2Rect = new Rect(Character2.XPosition, Character2.YPosition, area.Height / 10, area.Height / 10);
+                    if (bulletRect.IntersectsWith(character1Rect) && Bullets[i].Character != 1)
+                    {
+                        if (Bullets[i].Direction)
+                        {
+                            Character1.XPosition += area.Width / 10;
+                        }
+                        else
+                        {
+                            Character1.XPosition -= area.Width / 10;
+                        }
+                        Bullets.RemoveAt(i);
+                        Character1.Fall = true;
+                    }
+                    if (bulletRect.IntersectsWith(character2Rect) && Bullets[i].Character != 2)
+                    {
+                        if (Bullets[i].Direction)
+                        {
+                            Character2.XPosition += area.Width / 10;
+                        }
+                        else
+                        {
+                            Character2.XPosition -= area.Width / 10;
+                        }
+                        Bullets.RemoveAt(i);
+                        Character2.Fall = true;
+                    }
                 }
             }
 

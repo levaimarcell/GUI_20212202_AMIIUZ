@@ -33,6 +33,7 @@ namespace WPF_GunMayhem
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             logic = new GameLogic();
+            logic.GameOver += Logic_GameOver;
             display.SetupModel(logic);
             controller = new GameController(logic);
 
@@ -48,6 +49,15 @@ namespace WPF_GunMayhem
         private void GameTimer_Tick(object? sender, EventArgs e)
         {
             logic.TimeStep();
+        }
+
+        private void Logic_GameOver(object? sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Game Over!");
+            if(result == MessageBoxResult.OK)
+            {
+                this.Close();
+            }
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
