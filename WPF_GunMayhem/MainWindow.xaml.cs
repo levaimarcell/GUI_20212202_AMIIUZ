@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPF_GunMayhem.Logic;
+using WPF_GunMayhem.Controller;
+using System.Windows.Threading;
 
 namespace WPF_GunMayhem
 {
@@ -20,19 +23,60 @@ namespace WPF_GunMayhem
     /// </summary>
     public partial class MainWindow : Window
     {
+        GameController controller;
+        GameLogic logic;
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent();  
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            logic = new GameLogic();
+            logic.GameOver += Logic_GameOver;
+            display.SetupModel(logic);
+            controller = new GameController(logic);
+
+            DispatcherTimer gameTimer = new DispatcherTimer();
+            gameTimer.Interval = TimeSpan.FromMilliseconds(40);
+            gameTimer.Tick += GameTimer_Tick;
+            gameTimer.Start();
+
             display.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
+            logic.SetupSizes(new Size((int)grid.ActualWidth,(int)grid.ActualHeight));
+        }
+
+        private void GameTimer_Tick(object? sender, EventArgs e)
+        {
+            logic.TimeStep();
+        }
+
+        private void Logic_GameOver(object? sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Game Over!");
+            if(result == MessageBoxResult.OK)
+            {
+                this.Close();
+            }
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            display.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
+            if(logic != null)
+            {
+                display.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
+                logic.SetupSizes(new Size(grid.ActualWidth, grid.ActualHeight));
+            }
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            controller.KeyDown(e.Key);
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            controller.KeyUp(e.Key);
         }
     }
 }
